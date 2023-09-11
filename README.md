@@ -1,2 +1,2 @@
-# jerb
- a fun multipurpose discord bot
+# discord bot
+ multipurpos bot
