@@ -1,10 +1,6 @@
-import random
-import discord
+import random, discord
 from discord import app_commands
-from facts import facts
-from facts import noises
-from discord.ext import tasks
-import datetime
+from facts import facts, noises
 
 MY_GUILD = discord.Object(id=1148819928158310471)
 
@@ -15,19 +11,9 @@ class MyClient(discord.Client):
     async def setup_hook(self):
         self.tree.copy_global_to(guild=MY_GUILD)
         await self.tree.sync(guild=MY_GUILD)
-        unbanned.start()
 
 intents = discord.Intents.all()
 client = MyClient(intents=intents)
-
-# Make function to check if its October 5th
-
-@tasks.loop(hours=12)
-async def unbanned():
-    await client.wait_until_ready()
-    unbanned = datetime.datetime.strptime("05-10-2023", "%d-%m-%Y")
-    #if True: #datetime.datetime.now() <= unbanned
-    #    client.get_user(877392093155311686).dm_channel.send("**Eric_Shawn is unbanned!**")
 
 @client.event
 async def on_message(message):
