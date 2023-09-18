@@ -12,6 +12,7 @@ class MyClient(discord.Client):
         super().__init__(intents=intents)
         self.tree = app_commands.CommandTree(self)
     async def setup_hook(self):
+        self.tree.clear_commands(guild=None)
         self.tree.copy_global_to(guild=ADMIN_GUILD)
         synced = await self.tree.sync()
         for command in synced:
