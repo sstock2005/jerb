@@ -1,0 +1,3 @@
+[DEFAULT]
+guild.id=NUMBERS289034702384
+token=02w9843fjlksadjf0234ijflwsakdjf
