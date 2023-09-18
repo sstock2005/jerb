@@ -82,7 +82,7 @@ async def help(interaction: discord.Integration):
 
 @client.tree.command()
 async def clearcommands(interaction: discord.Integration):
-    if interaction.user.id != 877392093155311686:
+    if interaction.user.id != config.get("DEFAULT", "admin.id"):
         await interaction.response.send_message("You cannot use this command!")
         return
     try:

@@ -1,3 +1,4 @@
 [DEFAULT]
 admin.guild=928347293874
+admin.id=290834723984723
 token=298rhfqwouifq29384whfslkadfhjaoifaj
