@@ -5,15 +5,15 @@ from data import facts, noises
 config = configparser.ConfigParser()
 config.readfp(open(r'config.txt'))
 
-MY_GUILD = discord.Object(id=config.get("DEFAULT", "guild.id"))
+ADMIN_GUILD = discord.Object(id=config.get("DEFAULT", "admin.guild"))
 
 class MyClient(discord.Client):
     def __init__(self, *, intents: discord.Intents):
         super().__init__(intents=intents)
         self.tree = app_commands.CommandTree(self)
     async def setup_hook(self):
-        self.tree.copy_global_to(guild=MY_GUILD)
-        await self.tree.sync(guild=MY_GUILD)
+        self.tree.copy_global_to(guild=ADMIN_GUILD)
+        await self.tree.sync()
 
 intents = discord.Intents.all()
 client = MyClient(intents=intents)
@@ -61,5 +61,14 @@ async def help(interaction: discord.Integration):
     e.set_footer(text="Made by Sam Stockstrom", icon_url="https://avatars.githubusercontent.com/u/144393153")
     e.timestamp = datetime.datetime.now()
     await interaction.response.send_message(embed=e)
+
+@client.tree.command()
+@app_commands.checks.has_permissions(administrator = True)
+async def sync(interaction: discord.Integration):
+    try:
+        await client.tree.sync()
+        await interaction.response.send_message("Commands Synced!")
+    except:
+        await interaction.response.send_message("Exception raised when syncing commands!")
 
 client.run(config.get("DEFAULT", "token"))
