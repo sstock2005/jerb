@@ -1,4 +1,4 @@
-import random, discord, configparser, aiohttp, io, datetime
+import random, discord, configparser, aiohttp, io, datetime, requests
 from discord import app_commands
 from data import facts, noises
 
@@ -42,11 +42,11 @@ async def fact(interaction: discord.Interaction):
 async def cat(interaction: discord.Interaction):
     """Shows you a random cat image from https://sillycats.me"""
     async with aiohttp.ClientSession() as session:
-        async with session.get("https://sillycats.me/cat") as resp:
+        async with session.get("https://sillycats.me/api/cat") as resp:
             img = await resp.read()
             with io.BytesIO(img) as file:
                 file=discord.File(file, "cat.png")
-                e = discord.Embed(url="https://sillycats.me", color=0x07a9f3)
+                e = discord.Embed(title=requests.get("https://sillycats.me/api/noise").text, url="https://sillycats.me", color=0x07a9f3)
                 e.set_image(url="attachment://cat.png")
                 e.set_footer(text="Made by Sam Stockstrom", icon_url="https://avatars.githubusercontent.com/u/144393153")
                 e.timestamp = datetime.datetime.utcnow()
@@ -61,4 +61,5 @@ async def help(interaction: discord.Integration):
     e.set_footer(text="Made by Sam Stockstrom", icon_url="https://avatars.githubusercontent.com/u/144393153")
     e.timestamp = datetime.datetime.now()
     await interaction.response.send_message(embed=e)
+
 client.run(config.get("DEFAULT", "token"))
