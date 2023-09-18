@@ -12,7 +12,6 @@ class MyClient(discord.Client):
         super().__init__(intents=intents)
         self.tree = app_commands.CommandTree(self)
     async def setup_hook(self):
-        self.tree.clear_commands(guild=None)
         self.tree.copy_global_to(guild=ADMIN_GUILD)
         synced = await self.tree.sync()
         for command in synced:
@@ -66,14 +65,17 @@ async def help(interaction: discord.Integration):
     await interaction.response.send_message(embed=e)
 
 @client.tree.command()
-@app_commands.checks.has_permissions(administrator = True)
-async def sync(interaction: discord.Integration):
+async def clearcommands(interaction: discord.Integration):
+    if interaction.user.id != 877392093155311686:
+        await interaction.response.send_message("You cannot use this command!")
+        return
     try:
+        client.tree.clear_commands(guild=None)
         synced = await client.tree.sync()
         for command in synced:
-            print(command.name + " Synced!")
-        await interaction.response.send_message("Commands Synced!")
+            print(command.name + " Cleared!")
+        await interaction.response.send_message("Commands Cleared! Restart Application")
     except:
-        await interaction.response.send_message("Exception raised when syncing commands!")
+        await interaction.response.send_message("Exception raised when clearing commands!")
 
 client.run(config.get("DEFAULT", "token"))
