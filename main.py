@@ -13,7 +13,9 @@ class MyClient(discord.Client):
         self.tree = app_commands.CommandTree(self)
     async def setup_hook(self):
         self.tree.copy_global_to(guild=ADMIN_GUILD)
-        await self.tree.sync()
+        synced = await self.tree.sync()
+        for command in synced:
+            print(command.name + " Synced!")
 
 intents = discord.Intents.all()
 client = MyClient(intents=intents)
@@ -66,7 +68,9 @@ async def help(interaction: discord.Integration):
 @app_commands.checks.has_permissions(administrator = True)
 async def sync(interaction: discord.Integration):
     try:
-        await client.tree.sync()
+        synced = await client.tree.sync()
+        for command in synced:
+            print(command.name + " Synced!")
         await interaction.response.send_message("Commands Synced!")
     except:
         await interaction.response.send_message("Exception raised when syncing commands!")
