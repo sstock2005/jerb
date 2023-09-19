@@ -71,7 +71,8 @@ async def cat(interaction: discord.Interaction):
                     filerare.write(interaction.user.global_name)
                 else:
                     if isbb(resp.headers.get('Content-Disposition')):
-                        title = "BIG BOOBS????"
+                        bb_titles = ["BIG BOOBS????", "Creature :3", "UNI"]
+                        title = random.choice(bb_titles)
                     else:
                         title = requests.get("https://sillycats.me/api/noise").text
                 footer_text = "Made by Sam Stockstrom"
