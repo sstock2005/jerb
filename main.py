@@ -1,4 +1,4 @@
-import random, discord, configparser, aiohttp, io, datetime, requests, os
+import random, discord, configparser, aiohttp, io, datetime, requests, os, re
 from discord import app_commands
 from data import facts, noises
 
@@ -12,10 +12,10 @@ class MyClient(discord.Client):
         super().__init__(intents=intents)
         self.tree = app_commands.CommandTree(self)
     #async def setup_hook(self):
-        #self.tree.copy_global_to(guild=ADMIN_GUILD)
-        #synced = await self.tree.sync()
-        #for command in synced:
-        #    print(command.name + " Synced!")
+    #    self.tree.copy_global_to(guild=ADMIN_GUILD)
+    #    synced = await self.tree.sync()
+    #    for command in synced:
+    #        print(command.name + " Synced!")
 
 intents = discord.Intents.all()
 client = MyClient(intents=intents)
@@ -47,6 +47,14 @@ async def fact(interaction: discord.Interaction):
     """Says a random rat fact"""
     await interaction.response.send_message(random.choice(facts), ephemeral=True)
 
+def isbb(input):
+    match = re.search(r'filename=([A-Za-z0-9]+\.png)', input)
+    if match:
+        if "bb" in match.group(1):
+            return True
+        else:
+            return False
+
 @client.tree.command()
 async def cat(interaction: discord.Interaction):
     """Shows you a random cat image from https://sillycats.me"""
@@ -62,8 +70,11 @@ async def cat(interaction: discord.Interaction):
                     filerare = open("rare.txt", 'w')
                     filerare.write(interaction.user.global_name)
                 else:
-                    title = requests.get("https://sillycats.me/api/noise").text
-                    footer_text = "Made by Sam Stockstrom"
+                    if isbb(resp.headers.get('Content-Disposition')):
+                        title = "BIG BOOBS????"
+                    else:
+                        title = requests.get("https://sillycats.me/api/noise").text
+                footer_text = "Made by Sam Stockstrom"
                 e = discord.Embed(title=title, url="https://sillycats.me", color=0x07a9f3)
                 e.set_image(url="attachment://cat.png")
                 e.set_footer(text=footer_text, icon_url="https://avatars.githubusercontent.com/u/144393153")
